@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Showgo 首页优化</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="preview-shell" aria-label="Showgo 首页优化设计还原">
+      <section class="phone-frame">
+        <img class="page-bg" src="./public/assets/figma/home-bg@3x.png" alt="" />
+
+        <div class="modal-region" aria-label="卡牌详情">
+          <div class="scrim"></div>
+          <div class="sheet">
+            <p class="count">120/200</p>
+
+            <div class="card-rail" aria-hidden="true">
+              <figure class="card-card side-card left-card">
+                <img class="card-image" src="./public/assets/figma/card-main@3x.png" alt="" />
+                <img class="card-image overlay-image" src="./public/assets/figma/card-left-overlay@3x.png" alt="" />
+              </figure>
+
+              <figure class="card-card main-card interactive-card" aria-label="Mega Charizard Y ex 可拖动卡牌">
+                <img class="card-image" src="./public/assets/figma/card-main@3x.png" alt="" />
+                <span class="holo-layer holo-spectrum" aria-hidden="true"></span>
+                <span class="holo-layer holo-shine" aria-hidden="true"></span>
+                <span class="holo-layer holo-grain" aria-hidden="true"></span>
+              </figure>
+
+              <figure class="card-card side-card right-card">
+                <img class="card-image" src="./public/assets/figma/card-main@3x.png" alt="" />
+                <img class="card-image overlay-image" src="./public/assets/figma/card-right-overlay@3x.png" alt="" />
+              </figure>
+            </div>
+
+            <div class="price-block">
+              <div class="price-line">
+                <span class="rank-badge">S</span>
+                <strong>RM 50,200.00</strong>
+              </div>
+              <div class="market-line">
+                <span>Market:</span>
+                <span>RM840.29</span>
+                <span class="trend-arrow" aria-hidden="true"></span>
+                <span class="trend-value">RM15.76</span>
+              </div>
+            </div>
+
+            <article class="info-panel">
+              <h1>Mega Charizard Y ex- 294/217</h1>
+              <div class="meta-row">
+                <span>Probability:</span>
+                <span>0.025%</span>
+                <i></i>
+                <span>#294/217</span>
+                <i></i>
+                <span>ME: Ascended Heroes</span>
+              </div>
+              <div class="tag-row">
+                <span class="tag tag-blue">Pokemon</span>
+                <span class="tag tag-indigo">Mega Hyper Rare</span>
+                <span class="tag tag-violet">Foil Only</span>
+              </div>
+            </article>
+
+            <button class="close-button" type="button">Close</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
