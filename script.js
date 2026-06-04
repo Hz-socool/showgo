@@ -7,10 +7,9 @@ const applyResponsiveScale = () => {
   if (!phoneFrame || !designCanvas) return;
 
   const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight || designHeight;
-  const scale = Math.min(1, viewportWidth / designWidth, viewportHeight / designHeight);
+  const scale = viewportWidth / designWidth;
 
-  phoneFrame.style.width = `${Math.round(designWidth * scale)}px`;
+  phoneFrame.style.width = `${Math.round(viewportWidth)}px`;
   phoneFrame.style.height = `${Math.round(designHeight * scale)}px`;
   designCanvas.style.transform = `scale(${scale})`;
 };
@@ -84,6 +83,11 @@ if (cards.length) {
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
+  const setTrendValue = (targetValue) => {
+    cancelAnimationFrame(trendAnimation);
+    details.trend.textContent = `RM${targetValue.toFixed(2)}`;
+  };
+
   const animateTrendValue = (targetValue) => {
     cancelAnimationFrame(trendAnimation);
 
@@ -103,7 +107,7 @@ if (cards.length) {
     trendAnimation = requestAnimationFrame(tick);
   };
 
-  const updateDetails = (index) => {
+  const updateDetails = (index, { animateTrend = false } = {}) => {
     const data = cardDetails[index];
     details.count.textContent = data.count;
     details.rank.textContent = data.rank;
@@ -116,7 +120,11 @@ if (cards.length) {
     details.tags.forEach((tag, tagIndex) => {
       tag.textContent = data.tags[tagIndex];
     });
-    animateTrendValue(data.trend);
+    if (animateTrend) {
+      animateTrendValue(data.trend);
+    } else {
+      setTrendValue(data.trend);
+    }
   };
 
   const resetCardTilt = (card) => {
@@ -128,8 +136,10 @@ if (cards.length) {
     card.style.setProperty("--holo-shift", "0px");
   };
 
-  const setActiveCard = (nextIndex) => {
-    activeIndex = clamp(nextIndex, 0, cards.length - 1);
+  const setActiveCard = (nextIndex, { animateTrend = false } = {}) => {
+    const resolvedIndex = clamp(nextIndex, 0, cards.length - 1);
+    const didChange = resolvedIndex !== activeIndex;
+    activeIndex = resolvedIndex;
 
     cards.forEach((card, index) => {
       const offset = index - activeIndex;
@@ -150,7 +160,7 @@ if (cards.length) {
       resetCardTilt(card);
     });
 
-    updateDetails(activeIndex);
+    updateDetails(activeIndex, { animateTrend: animateTrend && didChange });
   };
 
   const renderTilt = (card, event) => {
@@ -173,13 +183,15 @@ if (cards.length) {
     const dy = lastY - startY;
     const isHorizontalSwipe = Math.abs(dx) >= 54 && Math.abs(dx) > Math.abs(dy) * 1.25;
 
-    if (!isHorizontalSwipe) return;
+    if (!isHorizontalSwipe) return false;
 
-    if (dx < 0) {
-      setActiveCard(activeIndex + 1);
-    } else {
-      setActiveCard(activeIndex - 1);
-    }
+    const nextIndex = dx < 0 ? activeIndex + 1 : activeIndex - 1;
+    const resolvedIndex = clamp(nextIndex, 0, cards.length - 1);
+
+    if (resolvedIndex === activeIndex) return false;
+
+    setActiveCard(resolvedIndex, { animateTrend: true });
+    return true;
   };
 
   const releasePointer = ({ swipe = false } = {}) => {
@@ -240,7 +252,7 @@ if (cards.length) {
 
     card.addEventListener("click", () => {
       if (moved) return;
-      if (index !== activeIndex) setActiveCard(index);
+      if (index !== activeIndex) setActiveCard(index, { animateTrend: true });
     });
   });
 
@@ -265,5 +277,5 @@ if (cards.length) {
     if (activeCard && event.pointerId === activePointerId) releasePointer();
   });
 
-  setActiveCard(activeIndex);
+  setActiveCard(activeIndex, { animateTrend: false });
 }
